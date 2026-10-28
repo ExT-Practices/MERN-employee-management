@@ -1,7 +1,8 @@
 {
   "name": "employee-management",
   "version": "2.0.0",
-  "description": "Employee Management — backend + admin (Admin/HR/Manager) + frontend (Employee)",
+  "description": "MERN - Employee Management — backend + admin (Admin/HR/Manager) + frontend (Employee)",
+  "author": "Gaurav Kesharwani",
   "scripts": {
     "setup": "node backend/scripts/setup-db.js",
     "migrate:google": "node backend/scripts/migrate-google.js",
