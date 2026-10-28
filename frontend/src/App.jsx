@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { api } from './api'
 import { useEmployeeTable } from './hooks/useEmployeeTable'
 import { TablePagination, TableToolbar } from './components/TableToolbar'
+import { GoogleLoginButton } from './components/GoogleLoginButton'
 import './index.css'
 
 function Message({ text, ok }) {
@@ -14,6 +15,7 @@ function Login({ onLogin }) {
   const [password, setPassword] = useState('')
   const [msg, setMsg] = useState('')
   const [loading, setLoading] = useState(false)
+  const handleGoogleError = useCallback((text) => setMsg(text), [])
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -49,11 +51,16 @@ function Login({ onLogin }) {
           <button className="btn btn-primary" type="submit" disabled={loading}>
             {loading ? 'Signing in…' : 'Login'}
           </button>
+          <GoogleLoginButton
+            onLogin={onLogin}
+            onError={handleGoogleError}
+          />
           <Message text={msg} />
         </form>
         <p className="hint">
           Employee only. Password: <strong>password123</strong><br />
-          Try: employee2 / sneha / Iksha
+          Try: employee2 / sneha / Iksha<br />
+          Google se bhi login kar sakte ho.
         </p>
       </div>
     </section>

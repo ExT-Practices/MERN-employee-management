@@ -1,6 +1,7 @@
 const express = require('express');
 const { callProcedure } = require('../../shared/db');
 const { comparePassword, signToken } = require('../../shared/auth');
+const { getGoogleClientId, googleLoginForEmployee } = require('../../shared/googleAuth');
 
 const router = express.Router();
 
@@ -29,6 +30,31 @@ const router = express.Router();
  *       403:
  *         description: Role not allowed on this portal
  */
+router.get('/google-client', (req, res) => {
+  res.json({ success: true, clientId: getGoogleClientId() });
+});
+
+/**
+ * @swagger
+ * /api/auth/google:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Login with Google (Employee)
+ *     security: []
+ */
+router.post('/google', async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ success: false, message: 'Google credential required' });
+    }
+    const result = await googleLoginForEmployee(credential);
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ success: false, message: err.message });
+  }
+});
+
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;

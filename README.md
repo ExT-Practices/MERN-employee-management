@@ -33,8 +33,21 @@ frontend/    → React UI for Employee
 - Delete Employee
 
 ## Default pages
-- **Admin portal**: Login + Register (Register only works when logged in as Admin)
-- **Employee frontend**: Login
+- **Admin portal**: Login + Register + **Google login**
+- **Employee frontend**: Login + **Google login**
+
+## Google login
+1. Create an OAuth Client ID in [Google Cloud Console](https://console.cloud.google.com/apis/credentials) (type: Web application).
+2. Authorized JavaScript origins:
+   - `http://localhost:5001`
+   - `http://localhost:5002`
+3. Put the Client ID in `backend/.env`:
+   ```
+   GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+   ```
+4. Run `npm run migrate:google` once (adds email/google_id columns).
+5. First Admin Google login links to the existing `admin` user if that user has no email yet.
+6. Employee Google login creates an Employee account if the Gmail is new.
 
 ## Setup
 

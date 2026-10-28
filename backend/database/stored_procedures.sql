@@ -12,13 +12,41 @@ DROP PROCEDURE IF EXISTS sp_get_employee_by_id$$
 DROP PROCEDURE IF EXISTS sp_get_all_employees$$
 DROP PROCEDURE IF EXISTS sp_get_employee_by_user_id$$
 DROP PROCEDURE IF EXISTS sp_create_user$$
+DROP PROCEDURE IF EXISTS sp_get_user_by_email$$
+DROP PROCEDURE IF EXISTS sp_get_user_by_google_id$$
+DROP PROCEDURE IF EXISTS sp_link_google$$
 
 -- ===================== AUTH =====================
 CREATE PROCEDURE sp_get_user_by_username(IN p_username VARCHAR(50))
 BEGIN
-    SELECT id, username, password, role, created_at
+    SELECT id, username, password, email, google_id, role, created_at
     FROM users
     WHERE username = p_username;
+END$$
+
+CREATE PROCEDURE sp_get_user_by_email(IN p_email VARCHAR(100))
+BEGIN
+    SELECT id, username, password, email, google_id, role, created_at
+    FROM users
+    WHERE email = p_email;
+END$$
+
+CREATE PROCEDURE sp_get_user_by_google_id(IN p_google_id VARCHAR(64))
+BEGIN
+    SELECT id, username, password, email, google_id, role, created_at
+    FROM users
+    WHERE google_id = p_google_id;
+END$$
+
+CREATE PROCEDURE sp_link_google(
+    IN p_id INT,
+    IN p_email VARCHAR(100),
+    IN p_google_id VARCHAR(64)
+)
+BEGIN
+    UPDATE users
+    SET email = p_email, google_id = p_google_id
+    WHERE id = p_id;
 END$$
 
 CREATE PROCEDURE sp_create_user(

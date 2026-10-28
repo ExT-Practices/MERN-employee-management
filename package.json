@@ -4,6 +4,7 @@
   "description": "Employee Management — backend + admin (Admin/HR/Manager) + frontend (Employee)",
   "scripts": {
     "setup": "node backend/scripts/setup-db.js",
+    "migrate:google": "node backend/scripts/migrate-google.js",
     "seed": "node backend/scripts/seed.js",
     "build:admin": "npm run build --prefix admin",
     "build:frontend": "npm run build --prefix frontend",
@@ -21,6 +22,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "google-auth-library": "^11.3.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.12.0",
     "swagger-jsdoc": "^6.2.8",

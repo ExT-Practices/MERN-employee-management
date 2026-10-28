@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { api } from '../api'
+import { GoogleLoginButton } from './GoogleLoginButton'
 
 function Message({ text, ok }) {
   if (!text) return null
@@ -16,6 +17,7 @@ export function AuthPages({ onLogin, token, user }) {
   })
   const [msg, setMsg] = useState({ text: '', ok: false })
   const [loading, setLoading] = useState(false)
+  const handleGoogleError = useCallback((text) => setMsg({ text, ok: false }), [])
 
   async function handleLogin(e) {
     e.preventDefault()
@@ -112,11 +114,16 @@ export function AuthPages({ onLogin, token, user }) {
             <button className="btn btn-primary" type="submit" disabled={loading}>
               {loading ? 'Signing in…' : 'Login'}
             </button>
+            <GoogleLoginButton
+              onLogin={onLogin}
+              onError={handleGoogleError}
+            />
             <Message text={msg.text} ok={msg.ok} />
             <p className="hint">
               Only <strong>Admin</strong> can login.<br />
               Login ke baad Admin dashboard me <strong>HR</strong> aur <strong>Manager</strong> sections milenge.<br />
-              Demo: <strong>admin</strong> / <strong>password123</strong>
+              Demo: <strong>admin</strong> / <strong>password123</strong><br />
+              Google se bhi login kar sakte ho.
             </p>
           </form>
         ) : (

@@ -6,8 +6,43 @@ const {
   hashPassword,
   authMiddleware,
 } = require('../../shared/auth');
+const { getGoogleClientId, googleLoginForAdmin } = require('../../shared/googleAuth');
 
 const router = express.Router();
+
+router.get('/google-client', (req, res) => {
+  res.json({ success: true, clientId: getGoogleClientId() });
+});
+
+/**
+ * @swagger
+ * /api/auth/google:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Login with Google (Admin)
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [credential]
+ *             properties:
+ *               credential: { type: string }
+ */
+router.post('/google', async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ success: false, message: 'Google credential required' });
+    }
+    const result = await googleLoginForAdmin(credential);
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ success: false, message: err.message });
+  }
+});
 
 /**
  * @swagger
@@ -16,19 +51,6 @@ const router = express.Router();
  *     tags: [Auth]
  *     summary: Login as Admin only (HR & Manager live under Admin dashboard)
  *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [username, password]
- *             properties:
- *               username: { type: string, example: admin }
- *               password: { type: string, example: password123 }
- *     responses:
- *       200:
- *         description: Login success
  */
 router.post('/login', async (req, res) => {
   try {

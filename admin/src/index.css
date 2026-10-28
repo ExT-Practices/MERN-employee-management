@@ -271,6 +271,29 @@ th {
   .main { padding: 20px 16px 40px; }
 }
 
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--panel-border);
+}
+
+.google-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
 .auth-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
