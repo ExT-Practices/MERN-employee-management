@@ -7,6 +7,7 @@ const {
   authMiddleware,
 } = require('../../shared/auth');
 const { getGoogleClientId, googleLoginForAdmin } = require('../../shared/googleAuth');
+const { sendMailSafe, welcomeUserEmail } = require('../../shared/mailer');
 
 const router = express.Router();
 
@@ -109,13 +110,14 @@ router.post('/login', async (req, res) => {
  *               username: { type: string, example: newhr }
  *               password: { type: string, example: password123 }
  *               role: { type: string, enum: [Admin, HR, Manager, Employee] }
+ *               email: { type: string, example: newhr@company.com }
  *     responses:
  *       201:
  *         description: User registered
  */
 router.post('/register', authMiddleware(['Admin']), async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const { username, password, role, email } = req.body;
     const allowedRoles = ['Admin', 'HR', 'Manager', 'Employee'];
 
     if (!username || !password || !role) {
@@ -139,10 +141,14 @@ router.post('/register', authMiddleware(['Admin']), async (req, res) => {
     const hashed = await hashPassword(password);
     const out = await callProcedureWithOut('sp_create_user', [username, hashed, role], 1);
 
+    if (email) {
+      sendMailSafe(welcomeUserEmail({ username, role, email, password }));
+    }
+
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
-      data: { id: out.out0, username, role },
+      data: { id: out.out0, username, role, email: email || null },
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

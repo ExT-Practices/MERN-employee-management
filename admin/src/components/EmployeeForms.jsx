@@ -407,7 +407,7 @@ export function ViewEmployees({ token, showActions = false }) {
 }
 
 export function RegisterUsers({ token }) {
-  const [form, setForm] = useState({ username: '', password: '', role: 'HR' })
+  const [form, setForm] = useState({ username: '', password: '', role: 'HR', email: '' })
   const [msg, setMsg] = useState({ text: '', ok: false })
 
   async function handleSubmit(e) {
@@ -419,8 +419,11 @@ export function RegisterUsers({ token }) {
         token,
         body: JSON.stringify(form),
       })
-      setMsg({ text: `${res.message}: ${res.data.username} (${res.data.role})`, ok: true })
-      setForm({ username: '', password: '', role: 'HR' })
+      const mailed = form.email
+        ? ' Welcome email queued.'
+        : ''
+      setMsg({ text: `${res.message}: ${res.data.username} (${res.data.role}).${mailed}`, ok: true })
+      setForm({ username: '', password: '', role: 'HR', email: '' })
     } catch (err) {
       setMsg({ text: err.message, ok: false })
     }
@@ -438,6 +441,10 @@ export function RegisterUsers({ token }) {
           <div className="field">
             <label>Password</label>
             <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required />
+          </div>
+          <div className="field">
+            <label>Email (optional — welcome mail)</label>
+            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           </div>
           <div className="field">
             <label>Role</label>

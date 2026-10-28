@@ -50,6 +50,40 @@ frontend/    → React UI for Employee
    - Admin portal: new Gmail becomes Admin (first login can also link the seed `admin` user).
    - Employee portal: new Gmail becomes Employee.
 
+## Email (nodemailer + Gmail)
+
+Welcome emails are sent when:
+- Admin/HR **adds an employee** (to that employee's email)
+- Admin **registers a user** and fills in an email
+- A **new Google account** signs up
+
+Add these to `backend/.env` (do not commit real passwords):
+
+```
+SMTP_SERVICE=gmail
+SMTP_USER=yourgmail@gmail.com
+SMTP_PASS=your_16_character_app_password
+SMTP_FROM=Employee Management <yourgmail@gmail.com>
+```
+
+Gmail App Password (required; your normal Gmail password will not work):
+1. Turn on [2-Step Verification](https://myaccount.google.com/signinoptions/two-step-verification).
+2. Open [App passwords](https://myaccount.google.com/apppasswords).
+3. Create one for **Mail**.
+4. Paste the 16-character password as `SMTP_PASS`.
+
+If SMTP is empty, APIs still succeed and the server logs `Email skipped`.
+
+Check that mail works:
+
+```bash
+npm run test:mail -- yourgmail@gmail.com
+```
+
+- `SMTP login OK` + `Email sent` = nodemailer is working. Open Inbox/Spam.
+- `NOT WORKING YET` = fill `SMTP_USER` / `SMTP_PASS` first.
+- `SMTP login FAILED` = wrong App Password (not your normal Gmail password).
+
 ## Setup
 
 ```bash

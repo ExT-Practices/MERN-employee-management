@@ -1,6 +1,7 @@
 const { OAuth2Client } = require('google-auth-library');
 const { callProcedure, callProcedureWithOut, pool } = require('./db');
 const { hashPassword, signToken } = require('./auth');
+const { sendMailSafe, welcomeUserEmail, welcomeEmployeeEmail } = require('./mailer');
 
 function getGoogleClientId() {
   return process.env.GOOGLE_CLIENT_ID || '';
@@ -90,11 +91,13 @@ function authResult(user) {
 async function googleLoginForAdmin(credential) {
   const profile = await verifyGoogleCredential(credential);
   let user = await findUser(profile);
+  let created = false;
   if (!user) {
     user = await linkFirstAdmin(profile);
   }
   if (!user) {
     user = await createGoogleUser(profile, 'Admin');
+    created = true;
   }
   if (user.role !== 'Admin') {
     await pool.query(`UPDATE users SET role = 'Admin' WHERE id = ?`, [user.id]);
@@ -102,6 +105,13 @@ async function googleLoginForAdmin(credential) {
   }
   if (!user.google_id) {
     await callProcedure('sp_link_google', [user.id, profile.email, profile.googleId]);
+  }
+  if (created) {
+    sendMailSafe(welcomeUserEmail({
+      username: user.username,
+      role: 'Admin',
+      email: profile.email,
+    }));
   }
   return authResult(user);
 }
@@ -133,6 +143,11 @@ async function googleLoginForEmployee(credential) {
   } catch {
     // Profile insert is optional if email/code already exists
   }
+  sendMailSafe(welcomeEmployeeEmail({
+    name: `${firstName} ${lastName}`.trim(),
+    email: profile.email,
+    empCode,
+  }));
   return authResult(user);
 }
 

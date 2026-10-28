@@ -1,6 +1,7 @@
 const express = require('express');
 const { callProcedure, callProcedureWithOut } = require('../../shared/db');
 const { authMiddleware, hashPassword } = require('../../shared/auth');
+const { sendMailSafe, welcomeEmployeeEmail } = require('../../shared/mailer');
 
 const router = express.Router();
 
@@ -139,6 +140,13 @@ router.post('/', authMiddleware(['Admin', 'HR']), async (req, res) => {
     );
 
     const rows = await callProcedure('sp_get_employee_by_id', [out.out0]);
+    sendMailSafe(welcomeEmployeeEmail({
+      name: `${first_name} ${last_name}`.trim(),
+      email,
+      empCode: emp_code,
+      username: create_login ? username : null,
+      password: create_login ? password : null,
+    }));
     res.status(201).json({ success: true, message: 'Employee added', data: rows[0] });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

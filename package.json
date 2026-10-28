@@ -6,6 +6,7 @@
     "setup": "node backend/scripts/setup-db.js",
     "migrate:google": "node backend/scripts/migrate-google.js",
     "seed": "node backend/scripts/seed.js",
+    "test:mail": "node backend/scripts/test-mail.js",
     "build:admin": "npm run build --prefix admin",
     "build:frontend": "npm run build --prefix frontend",
     "build:ui": "npm run build:admin && npm run build:frontend",
@@ -25,6 +26,7 @@
     "google-auth-library": "^11.3.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.12.0",
+    "nodemailer": "^10.2.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
   }
