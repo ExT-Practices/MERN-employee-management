@@ -46,8 +46,9 @@ frontend/    → React UI for Employee
    GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
    ```
 4. Run `npm run migrate:google` once (adds email/google_id columns).
-5. First Admin Google login links to the existing `admin` user if that user has no email yet.
-6. Employee Google login creates an Employee account if the Gmail is new.
+5. **Any Google account can login.**
+   - Admin portal: new Gmail becomes Admin (first login can also link the seed `admin` user).
+   - Employee portal: new Gmail becomes Employee.
 
 ## Setup
 

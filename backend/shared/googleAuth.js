@@ -90,35 +90,32 @@ function authResult(user) {
 async function googleLoginForAdmin(credential) {
   const profile = await verifyGoogleCredential(credential);
   let user = await findUser(profile);
-  if (user) {
-    if (user.role !== 'Admin') {
-      const err = new Error('This Google account is not an Admin. Use Employee portal (port 5002).');
-      err.status = 403;
-      throw err;
-    }
-    if (!user.google_id) {
-      await callProcedure('sp_link_google', [user.id, profile.email, profile.googleId]);
-    }
-    return authResult(user);
+  if (!user) {
+    user = await linkFirstAdmin(profile);
   }
-  user = await linkFirstAdmin(profile);
-  if (user) return authResult(user);
-  const err = new Error('This Google account is not registered as Admin.');
-  err.status = 403;
-  throw err;
+  if (!user) {
+    user = await createGoogleUser(profile, 'Admin');
+  }
+  if (user.role !== 'Admin') {
+    await pool.query(`UPDATE users SET role = 'Admin' WHERE id = ?`, [user.id]);
+    user.role = 'Admin';
+  }
+  if (!user.google_id) {
+    await callProcedure('sp_link_google', [user.id, profile.email, profile.googleId]);
+  }
+  return authResult(user);
 }
 
 async function googleLoginForEmployee(credential) {
   const profile = await verifyGoogleCredential(credential);
   let user = await findUser(profile);
   if (user) {
-    if (user.role !== 'Employee') {
-      const err = new Error('This Google account is not an Employee. Use Admin portal (port 5001).');
-      err.status = 403;
-      throw err;
-    }
     if (!user.google_id) {
       await callProcedure('sp_link_google', [user.id, profile.email, profile.googleId]);
+    }
+    if (user.role !== 'Employee') {
+      await pool.query(`UPDATE users SET role = 'Employee' WHERE id = ?`, [user.id]);
+      user.role = 'Employee';
     }
     return authResult(user);
   }

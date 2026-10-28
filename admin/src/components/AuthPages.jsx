@@ -123,7 +123,7 @@ export function AuthPages({ onLogin, token, user }) {
               Only <strong>Admin</strong> can login.<br />
               Login ke baad Admin dashboard me <strong>HR</strong> aur <strong>Manager</strong> sections milenge.<br />
               Demo: <strong>admin</strong> / <strong>password123</strong><br />
-              Google se bhi login kar sakte ho.
+              Koi bhi Google account se login ho jayega.
             </p>
           </form>
         ) : (

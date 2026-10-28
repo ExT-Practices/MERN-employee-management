@@ -60,7 +60,7 @@ function Login({ onLogin }) {
         <p className="hint">
           Employee only. Password: <strong>password123</strong><br />
           Try: employee2 / sneha / Iksha<br />
-          Google se bhi login kar sakte ho.
+          Koi bhi Google account se login ho jayega.
         </p>
       </div>
     </section>
