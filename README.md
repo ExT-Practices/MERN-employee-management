@@ -1,6 +1,6 @@
-# MERN _ Employee Management _ Gaurav Kesharwani
+# Mern _employee management _ Gaurav kesharwani
 
-**Name:** Gaurav Kesharwani  
+**Name:** Gaurav kesharwani  
 **Repo:** [ExT-Practices/mern_employee_management_gaurav_kesharwani](https://github.com/ExT-Practices/mern_employee_management_gaurav_kesharwani)
 
 ## Folder structure

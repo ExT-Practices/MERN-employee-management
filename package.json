@@ -1,8 +1,8 @@
 {
   "name": "employee-management",
   "version": "2.0.0",
-  "description": "MERN _ Employee Management _ Gaurav Kesharwani",
-  "author": "Gaurav Kesharwani",
+  "description": "Mern _employee management _ Gaurav kesharwani",
+  "author": "Gaurav kesharwani",
   "scripts": {
     "setup": "node backend/scripts/setup-db.js",
     "migrate:google": "node backend/scripts/migrate-google.js",
